@@ -31,3 +31,4 @@
      service:
        name: squid
        state: started
+     become: yes
