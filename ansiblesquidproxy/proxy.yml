@@ -1,0 +1,33 @@
+- name: VPS
+  hosts: test
+  tasks:
+   - name: Install squid proxy
+     apt:
+       name: squid
+       state: latest
+     become: yes
+   - name: Copy default squid conf
+     copy:
+       src: files/squid.conf
+       dest: /etc/squid/squid.conf
+     become: yes
+   - name: Default file edit ip adress
+     lineinfile:
+       path: /etc/squid/squid.conf
+       regexp: acl cliaweb src
+       line: acl cliaweb src {{ip}}
+     become: yes
+   - name: Install squid basic auth
+     apt:
+       name: apache2-utils
+       state: latest
+     become: yes
+   - name: Copy default passwd file
+     copy:
+       src: files/squid_passwd
+       dest: /etc/squid/squid_passwd
+     become: yes
+   - name: Enable and Reload Service
+     service:
+       name: squid
+       state: started
