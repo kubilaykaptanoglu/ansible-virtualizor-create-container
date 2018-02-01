@@ -40,7 +40,7 @@ ansible-playbook paket1.yml --extra-vars "id=232"  --extra-vars "ip=192.168.203.
 * user = container login  ssh username
 * password = container login  ssh password
 
-> Create container properties 
+### New container properties 
 * 512 MB RAM
 * 20 GB DİSK
 * 1 CORE CPU
