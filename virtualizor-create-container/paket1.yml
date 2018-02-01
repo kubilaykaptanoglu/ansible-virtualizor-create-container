@@ -1,0 +1,65 @@
+- name: VPS
+  hosts: localhost
+  become: true
+  become_user: root
+
+  tasks:
+   - name: Create VPS
+     shell: vzctl create {{id}} --hostname {{hostname}} --ostemplate {{os}}
+     become: true
+   - name: Copy default
+     copy:
+       src: files/defaultconf.conf
+       dest: /etc/vz/conf/{{id}}.conf
+   - name: Default file edit
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: PHYSPAGES=
+       line: PHYSPAGES="0:131072"
+   - name: Default file edit
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: SWAPPAGES
+       line: SWAPPAGES="0:131072"
+   - name: Default file edit
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: IP_ADDRESS=
+       line: IP_ADDRESS="{{ip}}"
+   - name: Default file edit
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: OSTEMPLATE
+       line: OSTEMPLATE="{{os}}"
+   - name: Default file edit  
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: DISKSPACE
+       line: DISKSPACE="20G:20.2G"
+   - name: Default file edit  
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: CPUUNITS
+       line: CPUUNITS="800"
+   - name: Default file edit    
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: CPULIMIT
+       line: CPULIMIT="40"
+   - name: Default file edit  
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: CPUS
+       line: CPUS="1"
+   - name: Default file edit    
+     lineinfile:
+       path: /etc/vz/conf/{{id}}.conf
+       regexp: HOSTNAME
+       line: HOSTNAME="{{hostname}}"
+   - name: Set username and password
+     shell: vzctl set {{id}} --userpasswd  {{user}}:{{password}}
+     become: true
+   - name: Start vps
+     shell: vzctl start {{id}}
+     become: true
+
